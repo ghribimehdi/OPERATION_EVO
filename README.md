@@ -29,9 +29,24 @@ cd OPERATION_EVO
 
 ### 2. Créer et activer l’environnement virtuel
 
+En CMD :
+
 ```cmd
 python -m venv .venv
 .venv\Scripts\activate.bat
+```
+
+En PowerShell, si l’entreprise applique des restrictions d’exécution :
+
+```powershell
+(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned) ; (& c:\Users\mghribi\Desktop\BETA_OPERATION_EVO\OPERATION_EVO\venv\Scripts\Activate.ps1)
+```
+
+Si vous travaillez déjà dans le venv, la séquence utile est :
+
+```powershell
+cd c:\Users\mghribi\Desktop\BETA_OPERATION_EVO\OPERATION_EVO\backend
+python app.py
 ```
 
 ### 3. Installer les dépendances

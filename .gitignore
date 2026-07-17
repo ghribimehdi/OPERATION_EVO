@@ -1,14 +1,43 @@
-# Backend (Flask)
-backend/__pycache__/
-backend/.env
+# Python / Flask
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+pip-wheel-metadata/
 
+# Virtual environments
 venv/
 .venv/
-# Frontend (Angular)
+env/
+ENV/
+
+# Environment files
+.env
+*.env
+backend/.env
+backend/.env.*
+
+# Demo-friendly: keep shared sample data visible for collaborators
+# Ignore only scratch/local artifacts, not the project demo database.
+*.local.db
+*.tmp.db
+*.sqlite-journal
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Frontend
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
-
-# Divers
-.DS_Store
-*.log
+frontend/.vite/
+frontend/coverage/
