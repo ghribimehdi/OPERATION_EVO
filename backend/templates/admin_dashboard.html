@@ -1,0 +1,1252 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Espace Admin Sopra HR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --color-primary: #C8102E;
+      --color-secondary: #F5821F;
+      --color-text: #1A1A1A;
+      --color-background: #FFFFFF;
+      --color-surface: #F4F5F7;
+      --color-muted: #5f6b7a;
+      --color-line: #e4e7eb;
+      --shadow: 0 12px 32px rgba(26, 26, 26, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--color-background);
+      color: var(--color-text);
+      position: relative;
+    }
+    .container {
+      width: 100%;
+      max-width: none;
+      margin: 0 auto;
+      padding: 16px 24px 28px;
+    }
+    .simple-footer {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--color-line);
+      color: var(--color-muted);
+      font-size: 13px;
+      text-align: center;
+      background: #ffffff;
+    }
+    .simple-footer .footer-content {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 12px 18px; margin: 0 0 16px; border-radius: 18px; background: rgba(255,255,255,0.96); border: 1px solid var(--color-line);
+      box-shadow: 0 8px 24px rgba(26,26,26,0.06); backdrop-filter: blur(10px);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .topbar-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 999px; background: #fce9ec; color: var(--color-primary); font-size: 12px; font-weight: 700; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .icon-button { width: auto; padding: 8px 10px; border-radius: 999px; background: #f4f5f7; color: var(--color-text); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+    .icon-button:hover { transform: none; box-shadow: none; }
+    .notification-panel { position: absolute; right: 0; top: calc(100% + 8px); width: 320px; background: white; border: 1px solid var(--color-line); border-radius: 16px; box-shadow: var(--shadow); padding: 12px; display: none; z-index: 30; }
+    .notification-panel.open { display: block; }
+    .notification-item { padding: 10px 8px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; margin-bottom: 8px; }
+    .notification-item:hover { background: #fff7f7; border-color: rgba(200,16,46,0.16); }
+    .notification-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--color-text); }
+    .notification-meta { font-size: 12px; color: var(--color-muted); }
+    .header-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: #fff7f7; color: var(--color-primary); font-size: 12px; font-weight: 700; }
+    .hero {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+      padding: 28px 32px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--color-primary) 0%, #a50d25 100%);
+      color: white; box-shadow: var(--shadow);
+      min-height: 154px;
+    }
+    .hero .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .hero .brand-meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .hero .brand { display: flex; align-items: center; gap: 12px; }
+    .hero .brand-mark {
+      width: 46px; height: 46px; border-radius: 14px;
+      display: block;
+      object-fit: contain;
+      padding: 4px;
+      background: rgba(255,255,255,0.95);
+      box-shadow: inset 0 -3px 8px rgba(255,255,255,0.25);
+    }
+    h1 { margin: 0 0 6px; font-size: 28px; letter-spacing: -0.02em; font-family: "Inter", sans-serif; font-weight: 700; }
+    .muted { color: rgba(255,255,255,0.82); margin: 0; font-weight: 500; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .pill.access { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+    .pill.bug { background: rgba(245,130,31,0.16); color: #a24f0f; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .card { background: var(--color-surface); padding: 18px; border-radius: 18px; box-shadow: var(--shadow); border: 1px solid var(--color-line); border-left: 4px solid var(--color-primary); }
+    .card h3 { margin: 0 0 8px; font-size: 13px; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: "Inter", sans-serif; font-weight: 600; }
+    .card p { margin: 0; font-size: 28px; font-weight: 700; color: var(--color-text); }
+    .panel { background: var(--color-surface); border-radius: 20px; padding: 18px 20px; box-shadow: var(--shadow); border: 1px solid var(--color-line); margin-bottom: 18px; overflow: hidden; }
+    .panel h2 { margin-top: 0; font-size: 18px; color: var(--color-text); font-family: "Inter", sans-serif; font-weight: 600; }
+    .panel .panel-subtitle { margin: 4px 0 10px; color: var(--color-muted); font-size: 13px; }
+    .layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .sidebar { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 20px; padding: 16px; box-shadow: var(--shadow); position: sticky; top: 20px; width: 100%; }
+    .sidebar-title { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px; }
+    .nav-btn { width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 8px; border-radius: 12px; background: transparent; color: var(--color-text); border: 1px solid transparent; font-weight: 600; }
+    .nav-btn.active { background: #fff7f7; color: var(--color-primary); border-color: rgba(200,16,46,0.16); }
+    .nav-btn:hover { transform: none; box-shadow: none; }
+    .sidebar-footer { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--color-line); color: var(--color-muted); font-size: 12px; display: flex; align-items: center; gap: 8px; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 0 4px rgba(200,16,46,0.14); }
+    .content-area { min-width: 0; width: 100%; }
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); gap: 20px; align-items: start; }
+    .monitoring-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .monitor-card { background: white; border: 1px solid var(--color-line); border-radius: 16px; padding: 14px; }
+    .monitor-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-muted); font-weight: 700; }
+    .monitor-value { font-size: 30px; font-weight: 800; margin: 8px 0 4px; color: var(--color-text); }
+    .monitor-help { font-size: 13px; color: var(--color-muted); margin-bottom: 6px; }
+    .mini-graph { height: 70px; margin-top: 8px; }
+    .mini-graph svg { width: 100%; height: 100%; }
+    .module-row { border: 1px solid var(--color-line); border-radius: 14px; background: white; padding: 12px; margin-bottom: 10px; }
+    .module-row-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .module-name { font-weight: 700; color: var(--color-text); }
+    .module-state { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .module-state.ok { background: #eaf7ee; color: #1f7a3a; }
+    .module-state.warning { background: #fff6e8; color: #a24f0f; }
+    .module-state.critical { background: #fde9ec; color: var(--color-primary); }
+    .progress { width: 100%; height: 10px; background: #f1f3f6; border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+    .progress-bar { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); }
+    .module-meta { font-size: 13px; color: var(--color-muted); line-height: 1.5; }
+    button { width: 100%; font: inherit; padding: 10px 12px; border-radius: 10px; border: none; box-sizing: border-box; background: var(--color-primary); color: white; cursor: pointer; font-weight: 700; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    button:hover { transform: translateY(-1px); box-shadow: 0 10px 18px rgba(200,16,46,0.18); }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
+    .toolbar input, .toolbar select { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-line); background: #fff; color: var(--color-text); min-width: 180px; font: inherit; }
+    .toolbar .helper { color: var(--color-muted); font-size: 12px; margin-left: auto; }
+    .toolbar input:focus, .toolbar select:focus { outline: 2px solid rgba(200,16,46,0.15); border-color: var(--color-primary); }
+    .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 6px; margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .pill.access { background: #fce9ec; color: var(--color-primary); }
+    .pill.bug { background: #fff2e6; color: var(--color-secondary); }
+    .pill.facturation { background: #f4f5f7; color: #4a5568; }
+    .pill.rh { background: #f4f5f7; color: #4a5568; }
+    .pill.achats { background: #f4f5f7; color: #4a5568; }
+    .table-scroll { max-height: 420px; overflow-y: auto; border-radius: 12px; border: 1px solid var(--color-line); background: #fff; }
+    table { width: 100%; border-collapse: collapse; table-layout: auto; }
+    th, td { border-bottom: 1px solid var(--color-line); padding: 10px 12px; text-align: left; vertical-align: top; word-break: break-word; }
+    th { background: #fafbfc; color: var(--color-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; font-family: "Inter", sans-serif; font-weight: 700; }
+    td:first-child, th:first-child { width: 70px; font-weight: 800; color: var(--color-primary); }
+    td:nth-child(2), th:nth-child(2) { min-width: 180px; }
+    td:nth-child(3), th:nth-child(3) { width: 110px; }
+    td:nth-child(4), th:nth-child(4) { width: 110px; }
+    td:nth-child(5), th:nth-child(5) { width: 95px; }
+    td:nth-child(6), th:nth-child(6) { width: 100px; }
+    .small { font-size: 12px; }
+    .analysis-result { display: block; margin-top: 12px; padding: 14px; border-radius: 14px; background: #fcfcfd; border: 1px solid var(--color-line); }
+    ul { padding-left: 18px; margin: 8px 0 0; }
+    .group-list { display: grid; gap: 10px; max-height: 420px; overflow-y: auto; padding-right: 6px; }
+    .group-item { padding: 12px; border: 1px solid var(--color-line); border-radius: 14px; background: #fff; cursor: pointer; transition: all 0.2s ease; }
+    .group-item:hover { border-color: var(--color-primary); transform: translateY(-1px); }
+    .group-item.active { border-color: var(--color-primary); background: #fff7f7; }
+    .group-item button { width: auto; margin-top: 8px; padding: 8px 10px; }
+    .group-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .detail-actions button { width: auto; padding: 8px 12px; font-size: 13px; }
+    .detail-actions .secondary { background: var(--color-secondary); }
+    .detail-actions .secondary:hover { box-shadow: 0 10px 18px rgba(245,130,31,0.2); }
+    .history-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .history-actions button { width: auto; padding: 8px 10px; font-size: 12px; }
+    .history-actions .secondary { background: var(--color-secondary); }
+    .history-actions .secondary:hover { box-shadow: 0 10px 18px rgba(245,130,31,0.2); }
+    .global-actions { display: flex; justify-content: flex-end; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; padding: 0 2px; }
+    .global-actions input { width: 280px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-line); font: inherit; }
+    .global-actions button { width: auto; padding: 10px 14px; }
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(13, 18, 32, 0.58); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      width: min(460px, 100%); background: #fff; border-radius: 20px; box-shadow: var(--shadow); border: 1px solid var(--color-line); overflow: hidden;
+    }
+    .modal-header { padding: 16px 18px; border-bottom: 1px solid var(--color-line); display: flex; justify-content: space-between; align-items: center; background: #fff7f7; }
+    .modal-title { font-size: 16px; font-weight: 800; color: var(--color-text); }
+    .modal-close { background: transparent; color: var(--color-muted); width: auto; padding: 6px; border-radius: 999px; font-size: 14px; }
+    .modal-body { padding: 18px; }
+    .modal-body p { margin: 0; line-height: 1.6; color: var(--color-text); }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 0 18px 18px; }
+    .modal-footer button { width: auto; padding: 8px 12px; }
+    .modal-footer .secondary { background: var(--color-secondary); }
+    .modal-input { width: 100%; margin-top: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-line); font: inherit; }
+    @media (max-width: 980px) {
+      .container { padding: 14px 16px 24px; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; margin-bottom: 12px; }
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-badge">🟢 Mission Ops</div>
+        <div class="header-badge">🛰️ Centre de supervision</div>
+        <div class="header-badge">⚠️ Alertes & incidents</div>
+      </div>
+      <div class="topbar-right" style="position:relative;">
+        <button class="icon-button" id="notification_toggle" type="button">🔔 3</button>
+        <div id="notification_panel" class="notification-panel">
+          <div class="notification-item" data-message="Nouveau ticket signalé par l’équipe RH">
+            <div class="notification-title">Nouveau ticket signalé</div>
+            <div class="notification-meta">RH • Il y a 8 min</div>
+          </div>
+          <div class="notification-item" data-message="Un incident impacte la fonctionnalité d’accès SSO">
+            <div class="notification-title">Incident accès SSO</div>
+            <div class="notification-meta">IT • Il y a 24 min</div>
+          </div>
+          <div class="notification-item" data-message="Demande de mise à jour du module Paiement">
+            <div class="notification-title">Mise à jour demandée</div>
+            <div class="notification-meta">Finance • Il y a 1 h</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-title">Navigation</div>
+        <button class="nav-btn active" data-view="dashboard" type="button">Dashboard admin</button>
+        <button class="nav-btn" data-view="monitoring" type="button">Supervision temps réel</button>
+        <button class="nav-btn" data-view="history" type="button">Historique des tickets</button>
+        <div class="sidebar-footer">
+          <span class="status-dot"></span>
+          <span>Surveillance active</span>
+        </div>
+      </aside>
+
+      <div class="content-area">
+        <section id="dashboard-view" class="view-section active">
+          <div class="hero">
+            <div class="brand">
+              <img class="brand-mark" src="/images.png" alt="Logo Sopra HR" />
+              <div class="brand-meta">
+                <h1>Espace Admin</h1>
+                <p class="muted">Vue claire des problèmes, groupes, statuts et suivis récents</p>
+              </div>
+            </div>
+            <div class="pill access">Sopra HR • Suivi</div>
+          </div>
+
+          <div class="cards">
+            <div class="card"><h3>Total tickets</h3><p id="total_tickets">--</p></div>
+            <div class="card"><h3>Tickets ouverts</h3><p id="tickets_ouverts">--</p></div>
+            <div class="card"><h3>Tickets en cours</h3><p id="tickets_en_cours">--</p></div>
+            <div class="card"><h3>Tickets résolus</h3><p id="tickets_resolus">--</p></div>
+          </div>
+
+          <div class="global-actions">
+            <input id="email_recipient" type="email" value="mehdi.ghribi@soprahr.com" placeholder="Email du destinataire" />
+            <button id="export_tickets_btn" class="secondary" type="button">Exporter CSV</button>
+            <button id="send_pr_btn" type="button">Envoyer le PR système par email</button>
+          </div>
+
+          <div class="grid">
+            <div class="panel">
+              <h2>Groupes de problèmes</h2>
+              <p class="panel-subtitle">Sélectionnez un groupe pour ouvrir le détail associé.</p>
+              <div id="problem_groups_list" class="group-list"></div>
+            </div>
+
+            <div class="panel">
+              <h2>Détail du groupe</h2>
+              <p class="panel-subtitle">Les tickets liés au groupe sélectionné apparaissent ici.</p>
+              <div class="detail-actions">
+                <button id="resume_group_btn" type="button">Résumé IA du groupe</button>
+                <button id="download_group_btn" class="secondary" type="button">Télécharger PDF</button>
+              </div>
+              <div style="margin-top: 10px; padding: 12px; border: 1px solid var(--color-line); border-radius: 12px; background: #fff;">
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); margin-bottom: 8px;">Affectation par groupe de problème</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                  <select id="assign_group_select" style="min-width: 260px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-line);">
+                    <option value="">Sélectionnez un groupe</option>
+                  </select>
+                  <div style="position: relative; min-width: 280px;">
+                    <input id="assign_user_input" type="text" placeholder="Nom ou email de l’utilisateur" style="width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--color-line);" />
+                    <div id="assign_user_suggestions" style="display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; background:#fff; border:1px solid var(--color-line); border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,0.12); z-index:20; max-height:220px; overflow:auto;"></div>
+                  </div>
+                  <button id="assign_ticket_btn" type="button" style="width: auto; padding: 10px 12px;">Affecter tout le groupe</button>
+                  <button id="suggest_group_assignment_btn" class="secondary" type="button" style="width: auto; padding: 10px 12px;">Suggérer assignation IA</button>
+                </div>
+              </div>
+              <div id="problem_updates_detail" class="analysis-result">Sélectionnez un groupe pour voir ses tickets récents.</div>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="panel">
+              <h2>Tickets récents</h2>
+              <div class="toolbar">
+                <input id="tickets_search" type="text" placeholder="Rechercher un ticket..." />
+                <select id="tickets_sort">
+                  <option value="default">Trier par</option>
+                  <option value="priorite">Priorité</option>
+                  <option value="gravite">Gravité</option>
+                  <option value="date">Temps</option>
+                </select>
+                <span class="helper">Filtrez rapidement les tickets récents</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th>ID</th><th>Titre</th><th>Statut</th><th>Catégorie</th><th>Priorité</th><th>Temps</th></tr></thead>
+                  <tbody id="tickets_table"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>Utilisateurs</h2>
+              <div class="toolbar">
+                <input id="users_search" type="text" placeholder="Rechercher un utilisateur..." />
+                <select id="users_sort">
+                  <option value="default">Trier par</option>
+                  <option value="nom">Nom</option>
+                  <option value="departement">Département</option>
+                  <option value="date">Date</option>
+                </select>
+                <span class="helper">Trouvez un utilisateur rapidement</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th>ID</th><th>Nom</th><th>Email</th><th>Département</th><th>Rôle</th><th>Créé le</th></tr></thead>
+                  <tbody id="users_table"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Activité & commentaires</h2>
+            <p class="panel-subtitle">Sélectionnez un ticket pour consulter sa fiche d’activité et laisser un commentaire interne.</p>
+            <div id="selected_ticket_detail" style="margin-bottom: 12px; padding: 12px; border: 1px solid var(--color-line); border-radius: 12px; background: #fff;"></div>
+            <div id="ticket_ai_insight" class="analysis-result" style="margin-bottom: 12px;"></div>
+            <textarea id="ticket_comment_input" rows="4" placeholder="Écrivez un commentaire interne pour ce ticket…" style="width:100%; border:1px solid var(--color-line); border-radius:10px; padding:10px; font:inherit;"></textarea>
+            <div class="detail-actions" style="margin-top: 10px;">
+              <button id="submit_comment_btn" type="button">Ajouter un commentaire</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="monitoring-view" class="view-section">
+          <div class="panel">
+            <h2>Supervision temps réel</h2>
+            <p class="panel-subtitle">Vue synthétique du fonctionnement du site, des modules et des incidents détectés.</p>
+            <div class="monitoring-grid">
+              <div class="monitor-card">
+                <div class="monitor-label">Disponibilité du service</div>
+                <div id="availability_value" class="monitor-value">--%</div>
+                <div class="monitor-help">Indice estimé du niveau de service global</div>
+                <div class="mini-graph">
+                  <svg viewBox="0 0 160 70" preserveAspectRatio="none">
+                    <polyline id="availability_chart" fill="none" stroke="#C8102E" stroke-width="3" points="" />
+                  </svg>
+                </div>
+              </div>
+              <div class="monitor-card">
+                <div class="monitor-label">Incidents actifs</div>
+                <div id="incident_count" class="monitor-value">--</div>
+                <div class="monitor-help">Nombre de modules qui ont un signal d’anomalie</div>
+                <div class="pill access">Modules à surveiller</div>
+              </div>
+            </div>
+            <div id="module_health_list"></div>
+            <div class="panel" style="margin-top: 16px;">
+              <h2>Métriques backend</h2>
+              <p class="panel-subtitle">Synthèse lisible par statut, priorité et tendance utile pour le suivi rapide.</p>
+              <div id="monitoring_metrics_summary" class="analysis-result" style="margin-top: 4px;"></div>
+              <div class="table-scroll" style="margin-top: 12px;">
+                <table>
+                  <thead><tr><th>Statut</th><th>Priorité</th><th>Nombre</th></tr></thead>
+                  <tbody id="monitoring_metrics_table"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="history-view" class="view-section">
+          <div class="panel">
+            <h2>Historique des tickets</h2>
+            <p class="panel-subtitle">Consultez les tickets reçus et traités, puis téléchargez ou supprimez-les après validation du PIN à 4 chiffres.</p>
+            <div class="toolbar">
+              <input id="history_search" type="text" placeholder="Rechercher un ticket historique..." />
+              <span class="helper">PIN habilitant : {{ history_pin | default('1234') }}</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Statut</th>
+                    <th>Département</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="history_tickets_table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="app_modal_overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="app_modal_title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div id="app_modal_title" class="modal-title">Message</div>
+        <button id="app_modal_close" class="modal-close" type="button" aria-label="Fermer">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="app_modal_message"></p>
+        <input id="app_modal_input" class="modal-input" type="password" placeholder="Entrez votre PIN à 4 chiffres" style="display:none;" />
+      </div>
+      <div class="modal-footer">
+        <button id="app_modal_secondary" class="secondary" type="button" style="display:none;">Annuler</button>
+        <button id="app_modal_primary" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="simple-footer" aria-label="Pied de page">
+    <div class="footer-content">
+      <span>Mehdi Ghribi</span>
+      <span>•</span>
+      <span>23 ans</span>
+      <span>•</span>
+      <span>+216 56249399</span>
+      <span>•</span>
+      <span>ghribi.mehdi@esprit.tn</span>
+    </div>
+  </footer>
+
+  <script>
+    const state = { tickets: [], users: [], problemGroups: [], historyTickets: [], metrics: [], selectedTicketId: null };
+    const historyPin = "{{ history_pin | default('1234') }}";
+
+    const modal = {
+      overlay: document.getElementById('app_modal_overlay'),
+      title: document.getElementById('app_modal_title'),
+      message: document.getElementById('app_modal_message'),
+      input: document.getElementById('app_modal_input'),
+      primary: document.getElementById('app_modal_primary'),
+      secondary: document.getElementById('app_modal_secondary'),
+      close: document.getElementById('app_modal_close'),
+      resolver: null,
+      mode: 'alert',
+      open({ title, message, type = 'info', input = false, confirm = false, placeholder = '' }) {
+        this.title.textContent = title;
+        this.message.textContent = message;
+        this.input.style.display = input ? 'block' : 'none';
+        this.input.value = '';
+        this.input.placeholder = placeholder;
+        this.secondary.style.display = confirm ? 'inline-flex' : 'none';
+        this.primary.textContent = confirm ? 'Oui' : 'OK';
+        this.overlay.classList.add('open');
+        this.mode = input ? 'prompt' : (confirm ? 'confirm' : 'alert');
+      },
+      closeModal() {
+        this.overlay.classList.remove('open');
+        this.input.style.display = 'none';
+        this.secondary.style.display = 'none';
+        this.input.value = '';
+      },
+      async promptValue(message, placeholder = '') {
+        this.open({ title: 'Validation requise', message, input: true, placeholder });
+        return new Promise(resolve => {
+          const finish = (value) => {
+            this.closeModal();
+            resolve(value);
+          };
+          this.primary.onclick = () => finish(this.input.value);
+          this.secondary.onclick = () => finish(null);
+          this.close.onclick = () => finish(null);
+        });
+      },
+      async confirmAction(message) {
+        this.open({ title: 'Confirmation', message, confirm: true });
+        return new Promise(resolve => {
+          const finish = (value) => {
+            this.closeModal();
+            resolve(value);
+          };
+          this.primary.onclick = () => finish(true);
+          this.secondary.onclick = () => finish(false);
+          this.close.onclick = () => finish(false);
+        });
+      },
+      alert(message, title = 'Information') {
+        this.open({ title, message });
+        this.primary.onclick = () => this.closeModal();
+        this.secondary.onclick = () => this.closeModal();
+        this.close.onclick = () => this.closeModal();
+      }
+    };
+
+    function setActiveView(viewName) {
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewName));
+      document.querySelectorAll('.view-section').forEach(section => section.classList.toggle('active', section.id === `${viewName}-view`));
+    }
+
+    function renderMonitoringView() {
+      const moduleDefinitions = [
+        { name: 'Authentification', keywords: ['auth', 'connexion', 'sso', 'login', 'access'], severity: 'access' },
+        { name: 'Paiement', keywords: ['facture', 'paiement', 'finance', 'compta'], severity: 'bug' },
+        { name: 'RH', keywords: ['rh', 'contrat', 'paie', 'recrutement'], severity: 'access' },
+        { name: 'Catalogue', keywords: ['catalogue', 'produit', 'interface', 'bug'], severity: 'bug' }
+      ];
+      const modules = moduleDefinitions.map(module => {
+        const issues = (state.tickets || []).filter(ticket => module.keywords.some(keyword => normalizeText(ticket.titre).includes(keyword) || normalizeText(ticket.categorie).includes(keyword) || normalizeText(ticket.description).includes(keyword))).length;
+        const health = Math.max(55, 100 - issues * 12);
+        let stateClass = 'ok';
+        let stateLabel = 'OK';
+        let message = 'Aucun problème détecté sur ce module.';
+        if (issues >= 2) {
+          stateClass = 'critical';
+          stateLabel = 'Critique';
+          message = 'Plusieurs anomalies sont observées sur ce module.';
+        } else if (issues === 1) {
+          stateClass = 'warning';
+          stateLabel = 'Attention';
+          message = 'Un ticket signalé sur ce module mérite une vérification.';
+        }
+        return { ...module, issues, health, stateClass, stateLabel, message };
+      });
+      const incidents = modules.filter(module => module.issues > 0).length;
+      const availability = Math.max(60, 100 - incidents * 10);
+      document.getElementById('availability_value').textContent = `${availability}%`;
+      const polyline = document.getElementById('availability_chart');
+      const points = [90, 92, 88, availability].map((value, index) => `${index * 50},${100 - value}`).join(' ');
+      polyline.setAttribute('points', points);
+      document.getElementById('incident_count').textContent = incidents;
+      const container = document.getElementById('module_health_list');
+      container.innerHTML = modules.map(module => `
+        <div class="module-row">
+          <div class="module-row-top">
+            <div class="module-name">${module.name}</div>
+            <span class="module-state ${module.stateClass}">${module.stateLabel}</span>
+          </div>
+          <div class="progress"><div class="progress-bar" style="width:${module.health}%"></div></div>
+          <div class="module-meta">${module.message}</div>
+        </div>
+      `).join('');
+    }
+
+    function normalizeText(value) {
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function formatDate(value) {
+      if (!value) return '-';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    function getPriorityRank(value) {
+      const rankMap = { critique: 5, urgente: 5, urgent: 5, haute: 4, elevee: 4, élevée: 4, moyenne: 3, faible: 2, basse: 1, basse: 1 };
+      return rankMap[normalizeText(value)] || 0;
+    }
+
+    function getGravityRank(value) {
+      const rankMap = { critique: 5, urgente: 5, urgent: 5, haute: 4, elevee: 4, élevée: 4, moyenne: 3, faible: 2, basse: 1 };
+      return rankMap[normalizeText(value)] || 0;
+    }
+
+    function filterRows(rows, query) {
+      const q = normalizeText(query).trim();
+      if (!q) return rows;
+      return rows.filter(row => Object.values(row).some(value => normalizeText(value).includes(q)));
+    }
+
+    function sortTickets(rows, mode) {
+      const sorted = [...rows];
+      if (mode === 'priorite') {
+        sorted.sort((a, b) => getPriorityRank(b.priorite) - getPriorityRank(a.priorite) || new Date(b.date_creation || 0) - new Date(a.date_creation || 0));
+      } else if (mode === 'gravite') {
+        sorted.sort((a, b) => getGravityRank(b.gravite) - getGravityRank(a.gravite) || new Date(b.date_creation || 0) - new Date(a.date_creation || 0));
+      } else if (mode === 'date') {
+        sorted.sort((a, b) => new Date(b.date_creation || 0) - new Date(a.date_creation || 0));
+      } else {
+        sorted.sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
+      }
+      return sorted;
+    }
+
+    function sortUsers(rows, mode) {
+      const sorted = [...rows];
+      if (mode === 'nom') {
+        sorted.sort((a, b) => normalizeText(a.nom).localeCompare(normalizeText(b.nom)));
+      } else if (mode === 'departement') {
+        sorted.sort((a, b) => normalizeText(a.departement).localeCompare(normalizeText(b.departement)));
+      } else if (mode === 'date') {
+        sorted.sort((a, b) => new Date(b.date_creation || 0) - new Date(a.date_creation || 0));
+      } else {
+        sorted.sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
+      }
+      return sorted;
+    }
+
+    function renderMetricsTable() {
+      const metricsTable = document.getElementById('metrics_table') || document.getElementById('monitoring_metrics_table');
+      const summaryBox = document.getElementById('metrics_summary') || document.getElementById('monitoring_metrics_summary');
+      if (!metricsTable || !summaryBox) return;
+      metricsTable.innerHTML = '';
+      if (!state.metrics.length) {
+        metricsTable.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color:#64748b;">Aucune métrique disponible.</td></tr>';
+        summaryBox.innerHTML = '<div style="color:#64748b;">Aucune métrique disponible pour le moment.</div>';
+        return;
+      }
+      const summary = state.metricsSummary || {};
+      const byStatusEntries = Object.entries(summary.by_status || {}).sort((a, b) => b[1] - a[1]);
+      const byPriorityEntries = Object.entries(summary.by_priority || {}).sort((a, b) => b[1] - a[1]);
+      const statusMarkup = byStatusEntries.length ? byStatusEntries.map(([status, count]) => `<span class="pill access">${status}: ${count}</span>`).join('') : '<span class="pill access">Aucun statut</span>';
+      const priorityMarkup = byPriorityEntries.length ? byPriorityEntries.map(([priority, count]) => `<span class="pill bug">${priority}: ${count}</span>`).join('') : '<span class="pill bug">Aucune priorité</span>';
+      summaryBox.innerHTML = `
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px;">
+          <strong>Total:</strong> <span class="pill access">${summary.total_tickets ?? state.metrics.reduce((sum, item) => sum + Number(item.count || 0), 0)}</span>
+          <strong>Par statut:</strong> ${statusMarkup}
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <strong>Par priorité:</strong> ${priorityMarkup}
+        </div>
+      `;
+      state.metrics.forEach(metric => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${metric.statut || '-'}</td><td>${metric.priorite || '-'}</td><td>${metric.count || 0}</td>`;
+        metricsTable.appendChild(row);
+      });
+    }
+
+    function renderTicketsTable() {
+      const searchTerm = document.getElementById('tickets_search').value;
+      const sortMode = document.getElementById('tickets_sort').value;
+      const ticketsTable = document.getElementById('tickets_table');
+      const visible = sortTickets(filterRows(state.tickets, searchTerm), sortMode);
+      ticketsTable.innerHTML = '';
+      visible.forEach(ticket => {
+        const row = document.createElement('tr');
+        row.style.cursor = 'pointer';
+        row.dataset.ticketId = ticket.id;
+        row.innerHTML = `<td>${ticket.id}</td><td>${ticket.titre || '-'}</td><td>${ticket.statut || '-'}</td><td>${ticket.categorie || '-'}</td><td>${ticket.priorite || '-'}</td><td>${formatDate(ticket.date_creation)}</td>`;
+        if (Number(state.selectedTicketId) === Number(ticket.id)) {
+          row.style.background = '#fff7f7';
+        }
+        row.addEventListener('click', () => {
+          state.selectedTicketId = ticket.id;
+          renderTicketsTable();
+          selectTicket(ticket.id);
+        });
+        ticketsTable.appendChild(row);
+      });
+      if (!visible.length) {
+        ticketsTable.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">Aucun ticket trouvé.</td></tr>';
+      }
+    }
+
+    function renderUsersTable() {
+      const searchTerm = document.getElementById('users_search').value;
+      const sortMode = document.getElementById('users_sort').value;
+      const usersTable = document.getElementById('users_table');
+      const visible = sortUsers(filterRows(state.users, searchTerm), sortMode);
+      usersTable.innerHTML = '';
+      visible.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${user.id}</td><td>${user.nom || '-'}</td><td>${user.email || '-'}</td><td>${user.departement || '-'}</td><td>${user.role || '-'}</td><td>${formatDate(user.date_creation)}</td>`;
+        usersTable.appendChild(row);
+      });
+      if (!visible.length) {
+        usersTable.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">Aucun utilisateur trouvé.</td></tr>';
+      }
+    }
+
+    function renderHistoryTicketsTable() {
+      const searchTerm = document.getElementById('history_search').value;
+      const historyTable = document.getElementById('history_tickets_table');
+      const visible = filterRows(state.historyTickets, searchTerm);
+      historyTable.innerHTML = '';
+      visible.forEach(ticket => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${ticket.id}</td>
+          <td>${ticket.titre || '-'}</td>
+          <td>${ticket.statut || '-'}</td>
+          <td>${ticket.departement_cible || '-'}</td>
+          <td>${ticket.historique_type || 'reçu'}</td>
+          <td>${formatDate(ticket.date_creation)}</td>
+          <td>
+            <div class="history-actions">
+              <button type="button" data-history-action="download" data-ticket-id="${ticket.id}">Télécharger</button>
+              <button class="secondary" type="button" data-history-action="delete" data-ticket-id="${ticket.id}">Supprimer</button>
+            </div>
+          </td>
+        `;
+        historyTable.appendChild(row);
+      });
+      if (!visible.length) {
+        historyTable.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#64748b;">Aucun ticket historique trouvé.</td></tr>';
+      }
+    }
+
+    function populateAssignmentSelects() {
+      const groupSelect = document.getElementById('assign_group_select');
+      const currentSelection = groupSelect ? groupSelect.value : '';
+      groupSelect.innerHTML = '<option value="">Sélectionnez un groupe</option>';
+      const groups = (state.problemGroups || []).map(group => ({ id: group.group_id, title: group.titre }));
+      groups.forEach(group => {
+        const option = document.createElement('option');
+        option.value = group.id;
+        option.textContent = group.title;
+        groupSelect.appendChild(option);
+      });
+      if (currentSelection) {
+        const matchingOption = Array.from(groupSelect.options).find(option => String(option.value) === String(currentSelection));
+        if (matchingOption) {
+          groupSelect.value = currentSelection;
+        }
+      }
+    }
+
+    async function readJsonResponse(response, fallback = null) {
+      const text = await response.text();
+      if (!text) return fallback;
+      const trimmed = text.trim();
+      if (!trimmed) return fallback;
+      if (trimmed.startsWith('<')) {
+        console.error('Réponse HTML reçue au lieu de JSON:', trimmed.slice(0, 400));
+        return fallback;
+      }
+      try {
+        return JSON.parse(trimmed);
+      } catch (error) {
+        console.error('Réponse non-JSON reçue:', trimmed.slice(0, 400));
+        return fallback;
+      }
+    }
+
+    function renderUserSuggestions() {
+      const input = document.getElementById('assign_user_input');
+      const suggestionsBox = document.getElementById('assign_user_suggestions');
+      const query = input.value.trim().toLowerCase();
+      if (!query) {
+        suggestionsBox.style.display = 'none';
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+      const matches = state.users.filter(user => {
+        const haystack = `${user.nom || ''} ${user.email || ''} ${user.departement || ''}`.toLowerCase();
+        return haystack.includes(query);
+      }).slice(0, 6);
+      if (!matches.length) {
+        suggestionsBox.style.display = 'none';
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+      suggestionsBox.innerHTML = matches.map(user => `
+        <div class="suggestion-item" data-user-id="${user.id}" data-user-label="${(user.nom || user.email || 'Utilisateur').replace(/"/g, '&quot;')}" style="padding:10px 12px; cursor:pointer; border-bottom:1px solid #f0f2f5; font-size:13px;">
+          <strong>${user.nom || user.email || 'Utilisateur'}</strong><br>
+          <span style="color:#64748b;">${user.email || '-'}</span>
+        </div>
+      `).join('');
+      suggestionsBox.style.display = 'block';
+      suggestionsBox.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+          input.value = item.dataset.userLabel;
+          suggestionsBox.style.display = 'none';
+          suggestionsBox.innerHTML = '';
+        });
+      });
+    }
+
+    async function loadHistoryTickets() {
+      try {
+        const response = await fetch('/api/tickets/history');
+        const data = await readJsonResponse(response, []);
+        state.historyTickets = Array.isArray(data) ? data : [];
+        renderHistoryTicketsTable();
+      } catch (error) {
+        console.error(error);
+        document.getElementById('history_tickets_table').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#64748b;">Impossible de charger l’historique.</td></tr>';
+      }
+    }
+
+    async function requestHistoryPin() {
+      const input = await modal.promptValue('Saisissez le PIN à 4 chiffres', 'PIN à 4 chiffres');
+      if (input === null || input === undefined) return null;
+      const cleaned = String(input).trim();
+      if (!/^\d{4}$/.test(cleaned)) {
+        modal.alert('Le PIN doit contenir exactement 4 chiffres.', 'PIN invalide');
+        return null;
+      }
+      if (cleaned !== String(historyPin)) {
+        modal.alert('PIN incorrect.', 'Accès refusé');
+        return null;
+      }
+      return cleaned;
+    }
+
+    async function handleHistoryAction(action, ticketId) {
+      const pin = await requestHistoryPin();
+      if (!pin) return;
+      const ticket = state.historyTickets.find(item => Number(item.id) === Number(ticketId));
+      if (!ticket) return;
+      if (action === 'download') {
+        const payload = JSON.stringify(ticket, null, 2);
+        const blob = new Blob([payload], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `ticket-${ticket.id}.json`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        modal.alert(`Le ticket #${ticket.id} a été téléchargé.`, 'Téléchargement');
+        return;
+      }
+      if (action === 'delete') {
+        const confirmed = await modal.confirmAction(`Voulez-vous vraiment supprimer le ticket #${ticket.id} ?`);
+        if (!confirmed) return;
+        try {
+          const response = await fetch(`/api/tickets/${ticketId}`, { method: 'DELETE' });
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.error || 'Impossible de supprimer le ticket.');
+          }
+          modal.alert(`Ticket #${ticket.id} supprimé.`, 'Suppression réussie');
+          await loadDashboard();
+        } catch (error) {
+          console.error(error);
+          modal.alert(error.message || 'Impossible de supprimer le ticket.', 'Erreur');
+        }
+      }
+    }
+
+    async function selectTicket(ticketId) {
+      state.selectedTicketId = ticketId;
+      const detailBox = document.getElementById('selected_ticket_detail');
+      const aiBox = document.getElementById('ticket_ai_insight');
+      const selectedTicket = state.tickets.find(item => Number(item.id) === Number(ticketId));
+      detailBox.innerHTML = selectedTicket ? `<strong>#${selectedTicket.id}</strong> — ${selectedTicket.titre || '-'}<br><span class="pill access">${selectedTicket.statut || '-'}</span><span class="pill bug">${selectedTicket.priorite || '-'}</span>` : 'Sélectionnez un ticket.';
+      aiBox.innerHTML = '<div style="color:#64748b;">Analyse IA en cours…</div>';
+      try {
+        const commentsRes = await fetch(`/api/tickets/${ticketId}/comments`);
+        const activityRes = await fetch(`/api/tickets/${ticketId}/activity`);
+        const comments = await readJsonResponse(commentsRes, []);
+        const activity = await readJsonResponse(activityRes, []);
+        const aiRes = await fetch('/api/tickets/ai-analysis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            titre: selectedTicket?.titre || '',
+            description: selectedTicket?.description || '',
+            categorie: selectedTicket?.categorie || '',
+            priorite: selectedTicket?.priorite || '',
+            statut: selectedTicket?.statut || ''
+          })
+        });
+        const aiPayload = await readJsonResponse(aiRes, {});
+        const aiSummary = aiPayload?.classification || {};
+        aiBox.innerHTML = `
+          <div style="font-weight:700; margin-bottom:8px;">Analyse IA</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <span class="pill access">Catégorie: ${aiSummary.categorie || '-'}</span>
+            <span class="pill bug">Priorité: ${aiSummary.priorite || '-'}</span>
+            <span class="pill facturation">Département: ${aiSummary.departement || '-'}</span>
+          </div>
+          <div style="margin-top:8px; color:#475569; font-size:13px;">${(aiPayload?.ai_suggestions?.reason || 'Analyse IA disponible pour ce ticket.').replace(/</g, '&lt;')}</div>
+        `;
+        const activityLines = Array.isArray(activity) ? activity : [];
+        const detailContent = [
+          '<div style="font-weight:700; margin-bottom:8px;">#' + (selectedTicket?.id || ticketId) + ' — ' + (selectedTicket?.titre || '-') + '</div>',
+          '<div style="margin-bottom:8px;"><strong>Commentaires</strong></div>',
+          '<ul>' + (comments.length ? comments.map(item => `<li>${(item.message || '-').replace(/</g, '&lt;')} <small>(${formatDate(item.date_creation)})</small></li>`).join('') : '<li>Aucun commentaire interne pour le moment.</li>') + '</ul>',
+          '<div style="margin-top:10px;"><strong>Activité</strong></div>',
+          '<ul>' + (activityLines.length ? activityLines.map(item => {
+            let detailText = '';
+            try {
+              const raw = typeof item.details === 'string' ? JSON.parse(item.details) : item.details || {};
+              detailText = raw.status || raw.message || raw.priority || raw.user_id || '';
+            } catch (error) {
+              detailText = '';
+            }
+            return `<li>${(item.action || '-').replace(/</g, '&lt;')}${detailText ? ` — ${String(detailText).replace(/</g, '&lt;')}` : ''}</li>`;
+          }).join('') : '<li>Aucune activité disponible.</li>') + '</ul>'
+        ].join('');
+        detailBox.innerHTML = detailContent;
+      } catch (error) {
+        console.error(error);
+        detailBox.innerHTML = 'Impossible de charger les commentaires et l’activité.';
+        aiBox.innerHTML = '<div style="color:#b91c1c;">Analyse IA indisponible.</div>';
+      }
+    }
+
+    async function loadMetrics() {
+      try {
+        const [res, summaryRes] = await Promise.all([
+          fetch('/api/tickets/metrics'),
+          fetch('/api/tickets/metrics-summary').catch(() => null)
+        ]);
+        const data = await res.json().catch(() => []);
+        const summaryPayload = summaryRes ? await summaryRes.json().catch(() => null) : null;
+        state.metrics = Array.isArray(data) ? data : [];
+        state.metricsSummary = summaryPayload || {
+          total_tickets: state.metrics.reduce((sum, item) => sum + Number(item.count || 0), 0),
+          by_status: {},
+          by_priority: {}
+        };
+        renderMetricsTable();
+      } catch (error) {
+        console.error(error);
+        state.metrics = [];
+        state.metricsSummary = { total_tickets: 0, by_status: {}, by_priority: {} };
+        renderMetricsTable();
+      }
+    }
+
+    async function loadDashboard() {
+      try {
+        const statsRes = await fetch('/api/stats');
+        const stats = await statsRes.json().catch(() => ({}));
+        document.getElementById('total_tickets').textContent = stats.total_tickets ?? '--';
+        document.getElementById('tickets_ouverts').textContent = stats.tickets_ouverts ?? '--';
+        document.getElementById('tickets_en_cours').textContent = stats.tickets_en_cours ?? '--';
+        document.getElementById('tickets_resolus').textContent = stats.tickets_resolus ?? '--';
+
+        const ticketsRes = await fetch('/api/tickets');
+        state.tickets = await ticketsRes.json().catch(() => []);
+        const usersRes = await fetch('/api/users');
+        state.users = await usersRes.json().catch(() => []);
+
+        renderTicketsTable();
+        renderUsersTable();
+        renderMonitoringView();
+        await loadMetrics();
+        await loadHistoryTickets();
+        await loadProblemGroups();
+        populateAssignmentSelects();
+      } catch (error) {
+        console.error(error);
+        document.body.innerHTML = '<h2>Impossible de charger le tableau de bord.</h2><p>' + (error?.message || error) + '</p>';
+      }
+    }
+
+    async function loadProblemGroups() {
+      const container = document.getElementById('problem_groups_list');
+      try {
+        const res = await fetch('/api/tickets/problem-groups');
+        const data = await res.json();
+        const groups = (data.groups || []).slice().sort((a, b) => {
+          const diff = Number(b.ticket_count || 0) - Number(a.ticket_count || 0);
+          if (diff !== 0) return diff;
+          return String(a.titre || '').localeCompare(String(b.titre || ''));
+        });
+        state.problemGroups = groups;
+        container.innerHTML = '';
+        groups.forEach(group => {
+          const card = document.createElement('div');
+          card.className = 'group-item';
+          card.innerHTML = `
+            <strong>${group.titre}</strong>
+            <div class="group-meta">
+              <span class="pill access">${group.statut || '-'}</span>
+              <span class="pill bug">${group.ticket_count || 0} tickets</span>
+            </div>
+            <div class="group-meta"><small>${Object.entries(group.categories || {}).map(([k, v]) => `${k} (${v})`).join(', ') || 'Aucune catégorie'}</small></div>
+            <button onclick="loadProblemUpdates(${group.group_id})">Voir les updates</button>
+          `;
+          card.onclick = () => loadProblemUpdates(group.group_id);
+          container.appendChild(card);
+        });
+        if (groups.length) {
+          await loadProblemUpdates(groups[0].group_id);
+        }
+      } catch (error) {
+        container.innerHTML = '<p>Impossible de charger les groupes de problèmes.</p>';
+      }
+    }
+
+    let currentGroupSummary = null;
+
+    function buildSystemSummary(stats, tickets, users) {
+      const total = Number(stats.total_tickets || 0);
+      const ouverts = Number(stats.tickets_ouverts || 0);
+      const enCours = Number(stats.tickets_en_cours || 0);
+      const resolus = Number(stats.tickets_resolus || 0);
+      const categories = [...new Set(tickets.map(ticket => ticket.categorie || 'Sans catégorie'))].slice(0, 5);
+      const activeUsers = users.slice(0, 5).map(user => user.nom || user.email || 'Utilisateur').join(', ');
+      return `PR de synthèse système\n\nRésumé global :\n- Total tickets : ${total}\n- Tickets ouverts : ${ouverts}\n- Tickets en cours : ${enCours}\n- Tickets résolus : ${resolus}\n\nCatégories observées : ${categories.join(', ')}\nUtilisateurs actifs : ${activeUsers}\n\nObservation : le système affiche un volume continu de tickets à traiter. Les groupes avec le plus grand nombre de tickets devraient faire l’objet d’un suivi prioritaire.`;
+    }
+
+    function buildGroupSummary(data, tickets) {
+      const title = data.group_title || 'Groupe';
+      const status = data.group_status || '-';
+      const issueCount = tickets.length;
+      const openCount = tickets.filter(ticket => String(ticket.statut || '').toLowerCase() === 'ouvert').length;
+      const inProgressCount = tickets.filter(ticket => String(ticket.statut || '').toLowerCase() === 'en_cours' || String(ticket.statut || '').toLowerCase() === 'en cours').length;
+      const resolvedCount = tickets.filter(ticket => String(ticket.statut || '').toLowerCase() === 'résolu' || String(ticket.statut || '').toLowerCase() === 'resolu').length;
+      const categories = [...new Set(tickets.map(ticket => ticket.categorie || 'Sans catégorie'))].slice(0, 5);
+      const priorities = [...new Set(tickets.map(ticket => ticket.priorite || '-'))].slice(0, 3);
+      const departments = [...new Set(tickets.map(ticket => ticket.departement_cible || '-'))].slice(0, 4);
+      const priorityFocus = priorities.length ? priorities.join(', ') : 'Aucune';
+      const departmentFocus = departments.length ? departments.join(', ') : 'Aucun département';
+      const action = issueCount > 1 ? 'Priorité de traitement : ce groupe concentre plusieurs incidents à suivre rapidement.' : 'Priorité de traitement : ce groupe mérite un suivi ponctuel.';
+      const urgency = openCount + inProgressCount > 0 ? `Le groupe contient ${openCount} ticket(s) ouvert(s) et ${inProgressCount} ticket(s) en cours.` : 'Aucun ticket ouvert ni en cours actuellement.';
+      return `Résumé du groupe : ${title}\n\nStatut global : ${status}\nTickets liés : ${issueCount}\nTickets ouverts : ${openCount}\nTickets en cours : ${inProgressCount}\nTickets résolus : ${resolvedCount}\nCatégories observées : ${categories.join(', ')}\nPriorités signalées : ${priorityFocus}\nDépartements concernés : ${departmentFocus}\n\nAnalyse opérationnelle :\n- ${urgency}\n- ${action}\n- Les incidents sont concentrés sur un même sujet métier, ce qui rend ce groupe prioritaire pour l’analyse et la coordination.`;
+    }
+
+    function downloadGroupPdf() {
+      if (!currentGroupSummary) return;
+      const printWindow = window.open('', '', 'width=800,height=900');
+      if (!printWindow) return;
+      printWindow.document.write(`<!doctype html><html><head><title>Résumé du groupe</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1{font-size:20px}pre{white-space:pre-wrap;background:#f7f7f7;padding:16px;border-radius:8px}</style></head><body><h1>Résumé du groupe</h1><pre>${currentGroupSummary}</pre></body></html>`);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => printWindow.print(), 300);
+    }
+
+    async function loadProblemUpdates(groupId) {
+      const detailBox = document.getElementById('problem_updates_detail');
+      const groupSelect = document.getElementById('assign_group_select');
+      if (groupSelect) {
+        groupSelect.value = String(groupId);
+      }
+      detailBox.innerHTML = 'Chargement des mises à jour...';
+      try {
+        const res = await fetch('/api/tickets/problem-updates?group_id=' + groupId);
+        const data = await res.json();
+        const tickets = data.tickets || [];
+        currentGroupSummary = buildGroupSummary(data, tickets);
+        detailBox.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <strong>${data.group_title || 'Groupe'}</strong>
+            <span class="pill access">${data.group_status || '-'}</span>
+          </div>
+          <div class="group-meta">
+            <span class="pill bug">${tickets.length} tickets liés</span>
+          </div>
+          <ul>
+            ${tickets.map(ticket => `<li><strong>#${ticket.id}</strong> ${ticket.titre} — <span class="pill access">${ticket.statut}</span> — ${ticket.departement_cible || '-'}</li>`).join('')}
+          </ul>
+        `;
+      } catch (error) {
+        detailBox.innerHTML = 'Impossible de charger les mises à jour.';
+        currentGroupSummary = null;
+      }
+    }
+
+    document.querySelectorAll('.nav-btn').forEach(button => {
+      button.addEventListener('click', () => setActiveView(button.dataset.view));
+    });
+    document.getElementById('notification_toggle').addEventListener('click', () => {
+      document.getElementById('notification_panel').classList.toggle('open');
+    });
+    document.querySelectorAll('.notification-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const message = item.dataset.message;
+        modal.alert(`Notification ouverte : ${message}`, 'Notification');
+      });
+    });
+    document.getElementById('tickets_search').addEventListener('input', renderTicketsTable);
+    document.getElementById('tickets_sort').addEventListener('change', renderTicketsTable);
+    document.getElementById('users_search').addEventListener('input', renderUsersTable);
+    document.getElementById('users_sort').addEventListener('change', renderUsersTable);
+    document.getElementById('history_search').addEventListener('input', renderHistoryTicketsTable);
+    document.getElementById('assign_user_input').addEventListener('input', renderUserSuggestions);
+    document.getElementById('history_tickets_table').addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-history-action]');
+      if (!button) return;
+      handleHistoryAction(button.dataset.historyAction, button.dataset.ticketId);
+    });
+    document.addEventListener('click', (event) => {
+      const suggestionsBox = document.getElementById('assign_user_suggestions');
+      if (!suggestionsBox.contains(event.target) && event.target.id !== 'assign_user_input') {
+        suggestionsBox.style.display = 'none';
+      }
+    });
+    document.getElementById('resume_group_btn').addEventListener('click', () => {
+      if (!currentGroupSummary) {
+        modal.alert('Sélectionnez d’abord un groupe de problèmes.', 'Information');
+        return;
+      }
+      const detailBox = document.getElementById('problem_updates_detail');
+      detailBox.innerHTML = `<div style="font-size:14px; line-height:1.6;"><strong>Résumé IA généré</strong><pre style="white-space:pre-wrap; background:#fff; padding:12px; border-radius:10px; border:1px solid #e4e7eb; margin-top:10px;">${currentGroupSummary}</pre></div>`;
+    });
+    document.getElementById('download_group_btn').addEventListener('click', downloadGroupPdf);
+    document.getElementById('suggest_group_assignment_btn').addEventListener('click', async () => {
+      const groupId = document.getElementById('assign_group_select').value;
+      if (!groupId) {
+        modal.alert('Sélectionnez d’abord un groupe de problèmes.', 'Information');
+        return;
+      }
+      try {
+        const matchingTickets = state.tickets.filter(ticket => Number(ticket.groupe_id) === Number(groupId));
+        if (!matchingTickets.length) {
+          modal.alert('Aucun ticket trouvé pour ce groupe de problème.', 'Aucune donnée');
+          return;
+        }
+        const fallbackUser = state.users.find(user => Number(user.id) === 2) || state.users[0];
+        if (!fallbackUser) {
+          modal.alert('Aucun utilisateur disponible pour l’affectation.', 'Aucune donnée');
+          return;
+        }
+        document.getElementById('assign_user_input').value = `${fallbackUser.nom || ''} ${fallbackUser.email || ''}`.trim();
+        const confirmation = await modal.confirmAction(`Affecter automatiquement le groupe #${groupId} à ${fallbackUser.nom || fallbackUser.email || 'cet utilisateur'} ?`);
+        if (!confirmation) return;
+        const results = [];
+        for (const ticket of matchingTickets) {
+          const assignResponse = await fetch(`/api/tickets/${ticket.id}/assign`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: Number(fallbackUser.id), group_id: Number(groupId) })
+          });
+          const result = await readJsonResponse(assignResponse, null);
+          if (!assignResponse.ok || !result || result.error) {
+            throw new Error(result?.error || 'Échec de l’affectation IA');
+          }
+          results.push(result);
+        }
+        modal.alert(`${results.length} ticket(s) affecté(s) à ${fallbackUser.nom || fallbackUser.email} via l’affectation directe.`, 'Affectation réussie');
+        await loadDashboard();
+      } catch (error) {
+        console.error(error);
+        modal.alert(error.message || 'Impossible d’appliquer l’affectation.', 'Erreur');
+      }
+    });
+    document.getElementById('assign_ticket_btn').addEventListener('click', async () => {
+      const userInput = document.getElementById('assign_user_input').value.trim();
+      const groupId = document.getElementById('assign_group_select').value;
+      if (!userInput || !groupId) {
+        modal.alert('Sélectionnez un groupe et renseignez un utilisateur avant d’affecter.', 'Action requise');
+        return;
+      }
+      const matchedUser = state.users.find(user => {
+        const haystack = `${user.nom || ''} ${user.email || ''} ${user.departement || ''}`.toLowerCase();
+        const query = userInput.toLowerCase();
+        return haystack.includes(query);
+      });
+      if (!matchedUser) {
+        modal.alert('Utilisateur introuvable. Saisissez un nom ou un email valide.', 'Utilisateur introuvable');
+        return;
+      }
+      try {
+        const matchingTickets = state.tickets.filter(ticket => Number(ticket.groupe_id) === Number(groupId));
+        if (!matchingTickets.length) {
+          modal.alert('Aucun ticket trouvé pour ce groupe de problème.', 'Aucune donnée');
+          return;
+        }
+        const results = [];
+        for (const ticket of matchingTickets) {
+          const response = await fetch(`/api/tickets/${ticket.id}/assign`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: Number(matchedUser.id), group_id: Number(groupId) })
+          });
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.error || 'Échec de l’affectation');
+          }
+          results.push(result);
+        }
+        modal.alert(`${results.length} ticket(s) affecté(s) à ${matchedUser.nom || matchedUser.email} pour le groupe #${groupId}`, 'Affectation réussie');
+        await loadDashboard();
+      } catch (error) {
+        console.error(error);
+        modal.alert(error.message || 'Impossible d’affecter les tickets.', 'Erreur');
+      }
+    });
+    document.getElementById('submit_comment_btn').addEventListener('click', async () => {
+      if (!state.selectedTicketId) {
+        modal.alert('Sélectionnez d’abord un ticket dans la liste.', 'Action requise');
+        return;
+      }
+      const input = document.getElementById('ticket_comment_input').value.trim();
+      if (!input) {
+        modal.alert('Renseignez un commentaire interne.', 'Action requise');
+        return;
+      }
+      try {
+        const response = await fetch(`/api/tickets/${state.selectedTicketId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: 1, message: input })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.error || 'Impossible d’ajouter le commentaire.');
+        }
+        document.getElementById('ticket_comment_input').value = '';
+        await selectTicket(state.selectedTicketId);
+        modal.alert('Commentaire ajouté.', 'Commentaire');
+      } catch (error) {
+        console.error(error);
+        modal.alert(error.message || 'Impossible d’ajouter le commentaire.', 'Erreur');
+      }
+    });
+    document.getElementById('export_tickets_btn').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/tickets/export?format=csv');
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'tickets.csv';
+        link.click();
+        window.URL.revokeObjectURL(url);
+        modal.alert('Export CSV téléchargé.', 'Export');
+      } catch (error) {
+        console.error(error);
+        modal.alert('Impossible d’exporter les tickets.', 'Erreur');
+      }
+    });
+    document.getElementById('send_pr_btn').addEventListener('click', async () => {
+      const recipient = document.getElementById('email_recipient').value.trim() || 'mehdi.ghribi@soprahr.com';
+      const summary = buildSystemSummary(
+        {
+          total_tickets: state.tickets.length,
+          tickets_ouverts: state.tickets.filter(ticket => String(ticket.statut).toLowerCase() === 'ouvert').length,
+          tickets_en_cours: state.tickets.filter(ticket => String(ticket.statut).toLowerCase() === 'en cours').length,
+          tickets_resolus: state.tickets.filter(ticket => String(ticket.statut).toLowerCase() === 'résolu').length,
+        },
+        state.tickets,
+        state.users
+      );
+      try {
+        const response = await fetch('/api/system-email/weekly', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipient })
+        });
+        const result = await response.json();
+        modal.alert(`${result.status === 'sent' ? 'PR système envoyé' : 'PR système préparé'} à ${recipient}`, 'Email envoyé');
+        console.log(summary);
+        console.log(`Destinataire : ${recipient}`);
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+        modal.alert('Impossible d’envoyer le PR système pour le moment.', 'Erreur');
+      }
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>
