@@ -1,9 +1,9 @@
 # Backend (Flask)
-backend/venv/
 backend/__pycache__/
 backend/.env
-backend/data/*.db
 
+venv/
+.venv/
 # Frontend (Angular)
 frontend/node_modules/
 frontend/dist/
